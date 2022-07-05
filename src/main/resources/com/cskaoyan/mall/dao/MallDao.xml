@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.MallDao">
+
+<select id="getAllType" resultType="com.cskaoyan.mall.model.po.GoodType">
+    select
+        id,
+        name
+    from goodtype
+</select>
+
+<select id="getAllHomepageGood" resultType="com.cskaoyan.mall.model.vo.HomepageGoodVo">
+    select
+        id,img,name,price,stockNum,typeId
+    from goods
+</select>
+</mapper>

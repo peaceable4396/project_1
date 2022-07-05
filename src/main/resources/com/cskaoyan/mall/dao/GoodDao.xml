@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.GoodDao">
+    <select id="getAllType" resultType="com.cskaoyan.mall.model.po.GoodType">
+        select
+            id,
+            name
+        from goodtype
+    </select>
+
+    <select id="getGoodByTypeId" resultType="com.cskaoyan.mall.model.po.Goods">
+        select
+            id,`desc`,img,name,typeId
+        from goods
+        where typeId = #{typeId}
+    </select>
+
+    <delete id="addType">
+        insert into goodtype
+            values (null ,#{name})
+    </delete>
+
+    <delete id="deleteType">
+        delete from goodtype
+        where id = #{typeId}
+    </delete>
+
+    <select id="getSpecByGoodsId" resultType="com.cskaoyan.mall.model.po.Spec">
+        select *
+        from spec
+        where goodsId = #{goodsId}
+    </select>
+
+    <insert id="addGoods">
+        insert into goods
+            values (null,#{desc},#{img},#{name},#{typeId})
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="addSpec">
+        insert into spec
+            values (null ,#{spec.specName},#{spec.stockNum},#{spec.unitPrice},#{goodsId})
+    </insert>
+
+    <delete id="deleteGoods">
+        delete from goods
+        where id = #{id}
+    </delete>
+
+    <select id="getGoodsById" resultType="com.cskaoyan.mall.model.vo.GetGoodsInfo_GoodsVo">
+        select
+            id,`desc`,img,`name`,typeId
+        from goods
+        where id = #{goodsId}
+    </select>
+
+    <delete id="deletSpecs">
+        delete from spec
+        where goodsId = #{goodsId}
+    </delete>
+
+    <delete id="deletSpec">
+        delete from spec
+        where goodsId = #{goodsId}
+        and specName = #{specName}
+    </delete>
+
+    <update id="updateGoods">
+        update goods
+            set `desc` = #{desc},img = #{img},name = #{name}, typeId = #{typeId}
+        where id = #{id}
+    </update>
+
+    <insert id="addSpecs">
+        insert into spec
+            values (null ,#{spec.specName},#{spec.stockNum},#{spec.unitPrice},#{goodsId})
+    </insert>
+
+    <select id="getAllGoods" resultType="com.cskaoyan.mall.model.po.Goods">
+        select
+            id,`desc`,img,`name`,typeId
+        from goods
+    </select>
+
+    <select id="getGoodsByName" resultType="com.cskaoyan.mall.model.po.Goods">
+        select
+            id,`desc`,img,`name`,typeId
+        from goods
+        where `name` like
+              concat('%',#{name},'%')
+    </select>
+
+    <select id="getSpecsByGoodsId" resultType="com.cskaoyan.mall.model.vo.SpecInfoVo">
+        select id,specName,stockNum,unitPrice
+        from spec
+        where goodsId = #{goodsId}
+    </select>
+
+    <insert id="addGoodsMsg">
+        insert into goodsmsg
+            values (null ,#{asker},#{content},#{time},#{goodsId},#{state})
+    </insert>
+
+    <select id="getAllUserNameId" resultType="com.cskaoyan.mall.model.redis.AllUserNameId">
+        select nickname,id as userId
+        from `user`
+    </select>
+
+    <select id="getAllGoodNameId" resultType="com.cskaoyan.mall.model.redis.AllGoodNameId">
+        select `name` , id as goodsId
+        from goods
+    </select>
+
+
+    <select id="getSpecById" resultType="com.cskaoyan.mall.model.po.Spec">
+        select id,unitPrice ,specName,goodsId,stockNum
+        from spec
+        where id = #{specId}
+    </select>
+
+    <select id="getGoodMsgByStateId" resultType="com.cskaoyan.mall.model.po.GoodMsg">
+        select *
+        from msg
+        where state  = #{state}
+    </select>
+
+    <select id="getGoodMsgByGoodsId" resultType="com.cskaoyan.mall.model.po.GoodMsg">
+        select *
+        from msg
+        where goodsId = #{goodsId}
+    </select>
+
+    <insert id="addMsg">
+        insert into msg
+            values (null ,#{content},#{replyContent},#{goods},#{username},#{createTime},#{replyTime},#{state},#{userId},#{goodsId})
+    </insert>
+
+    <update id="updateMsg">
+        update msg
+            set replyContent = #{getNoReplyMsgBo.content},
+                replyTime = #{time},
+                `state` = #{state}
+        where id = #{getNoReplyMsgBo.id}
+    </update>
+
+    <select id="getCommentByGoodsId" resultType="com.cskaoyan.mall.model.po.Comments">
+        select *
+        from comments
+        where goodsId = #{goodsId}
+    </select>
+
+    <update id="updateSpec">
+        update spec
+            set stockNum = #{number}
+        where id = #{id}
+    </update>
+
+    <insert id="addComment">
+        insert into comments
+            values (null ,#{comment},#{score},#{goodsId},#{specName},#{time},#{nickName},#{userId},#{orderId})
+    </insert>
+</mapper>

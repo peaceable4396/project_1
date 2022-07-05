@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.OrderDao">
+    <select id="getAllOrder" resultType="com.cskaoyan.mall.model.po.Order">
+        select
+        *
+        from orders
+        <where>
+            <if test="address != null and address != ''">
+                and address like
+                contat('%',#{address},'%')
+            </if>
+            <if test="goods != null and goods != ''">
+                and goods like
+                contat('%',#{goods},'%')
+            </if>
+            <if test="id != null and id != ''">
+                and id like
+                contat('%',#{id},'%')
+            </if>
+            <if test="moneyLimit1 != null and moneyLimit1 != ''">
+                and #{moneyLimit1} &gt;= amount
+            </if>
+            <if test="moneyLimit2 != null and moneyLimit2 != ''">
+                and amount &gt;= #{moneyLimit2}
+            </if>
+            <if test="name != null and name != ''">
+                and nickname like
+                contat('%',#{name},'%')
+            </if>
+            <if test="state != null and state != -1">
+                and stateId = #{state}
+            </if>
+        </where>
+        order by id desc
+        limit ${pagesize*(currentPage-1)} , ${pagesize}
+    </select>
+
+    <select id="getOrdersCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from orders
+        <where>
+            <if test="address != null and address != ''">
+                and address like
+                contat('%',#{address},'%')
+            </if>
+            <if test="goods != null and goods != ''">
+                and goods like
+                contat('%',#{goods},'%')
+            </if>
+            <if test="id != null and id != ''">
+                and id like
+                contat('%',#{id},'%')
+            </if>
+            <if test="moneyLimit1 != null and moneyLimit1 != ''">
+                and #{moneyLimit1} &gt;= amount
+            </if>
+            <if test="moneyLimit2 != null and moneyLimit2 != ''">
+                and amount &gt;= #{moneyLimit2}
+            </if>
+            <if test="name != null and name != ''">
+                and nickname like
+                contat('%',#{name},'%')
+            </if>
+            <if test="state != null and state != -1">
+                and stateId = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="getOrderById" resultType="com.cskaoyan.mall.model.po.Order">
+        select *
+        from orders
+        where id = #{id}
+    </select>
+
+    <update id="updateOrder">
+        update orders
+        set `number` = #{num},
+            amount   = #{amount},
+            specId   = #{spec.id},
+            spec     = #{spec.specName},
+            stateId  = #{states.id},
+            `state`  = #{states.name}
+        where id = #{id}
+    </update>
+
+    <delete id="deletOrderById">
+        delete
+        from orders
+        where id = #{id}
+    </delete>
+
+    <insert id="addOrder">
+        insert into orders
+        values (null, #{userId}, #{nickname}, #{receiver}, #{address}, #{phone}, #{goods}, #{goodsId}, #{spec},
+                #{specId}, #{number}, #{amount}, #{state}, #{stateId}, #{createtime}, #{hasComment}, #{score})
+    </insert>
+
+    <select id="getOrderByStateIdandUser" resultType="com.cskaoyan.mall.model.po.Order">
+        select *
+        from orders
+        where receiver = #{receiver}
+          and stateId = #{stateId}
+    </select>
+
+    <update id="settleOrder">
+        update orders
+        set amount   = #{order.amount},
+            `number` = #{order.goodsNum},
+            `state`  = #{state},
+            stateId  = #{stateId}
+        where id = #{order.id}
+    </update>
+
+    <select id="getOrderSpecById" resultType="com.cskaoyan.mall.model.vo.OrderGoodsSpec">
+        select spec, specId, `number`
+        from orders
+        where id = #{id}
+    </select>
+
+    <update id="updateState">
+        update orders
+        set stateId = #{stateId}
+        where id = #{id}
+    </update>
+
+    <select id="getOrderByUser" resultType="com.cskaoyan.mall.model.po.Order">
+        select *
+        from orders
+        where receiver = #{receiver}
+    </select>
+
+    <select id="getInfoByOrderId" resultType="com.cskaoyan.mall.model.vo.SpecNameandUserVo">
+        select spec, userId, nickname
+        from orders
+        where id = #{orderId}
+    </select>
+
+    <update id="changeOrderComment">
+        update orders
+        set hasComment = true,
+            score      = #{score}
+        where id = #{orderId}
+    </update>
+
+    <select id="getOrderCountByGoodsId" resultType="java.lang.Double">
+        select count(id)
+        from orders
+        where goodsId = #{goodsId}
+          and hasComment = true
+    </select>
+
+    <select id="getGoodOrderCountByGoodsId" resultType="java.lang.Double">
+        select count(id)
+        from orders
+        where goodsId = #{goodsId}
+          and hasComment = true
+          and score = 100
+    </select>
+</mapper>

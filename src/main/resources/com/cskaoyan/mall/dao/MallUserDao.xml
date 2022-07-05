@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.MallUserDao">
+    <select id="getUserByName" resultType="java.lang.String">
+        select pwd
+        from `user`
+        where email = #{email}
+    </select>
+
+    <select id="getAllUserEmails" resultType="java.lang.String">
+        select email
+        from `user`
+    </select>
+
+    <insert id="addUser">
+        insert into `user`
+        values (null, #{email}, #{pwd}, #{nickname}, #{recipient}, #{address}, #{phone})
+    </insert>
+
+    <select id="getUserByEmail" resultType="com.cskaoyan.mall.model.po.User">
+        select *
+        from user
+        where email = #{email}
+    </select>
+
+    <select id="getPwdByuserId" resultType="java.lang.String">
+        select pwd
+        from user
+        where id = #{userId}
+    </select>
+
+    <update id="changePwdByUserId">
+        update user
+            set pwd = #{newPwd}
+        where id = #{userId}
+    </update>
+
+    <update id="updateUser">
+        update user
+            set address = #{address},
+                nickname = #{nickname},
+                phone = #{phone},
+                recipient = #{recipient}
+        where id = #{id}
+    </update>
+</mapper>

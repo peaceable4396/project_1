@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.AdminDao">
+    <select id="queryCount" parameterType="com.cskaoyan.mall.model.Admin" resultType="int">
+        select count(*)
+        from admin
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <select id="selectAllAdmins" resultType="com.cskaoyan.mall.model.vo.AdminInfoVo">
+        select id,
+               username as email,
+               nickname as nickname,
+               password as pwd
+        from admin
+    </select>
+
+    <insert id="insertAdmin" parameterType="com.cskaoyan.mall.model.bo.AdminAddBo">
+        insert into admin
+        values (null, #{email}, #{pwd}, #{nickname})
+    </insert>
+
+    <select id="queryCountBYEmailorNickname" parameterType="com.cskaoyan.mall.model.Admin"
+            resultType="com.cskaoyan.mall.model.vo.AdminInfoVo">
+        select *
+        from admin
+        <where>
+            <if test="username != null">
+                and username = #{username}
+            </if>
+            <if test="nickname != null">
+                and nickname = #{nickname}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchAdmin"
+            resultType="com.cskaoyan.mall.model.vo.AdminInfoVo">
+        select
+        id,
+        username as email,
+        nickname as nickname,
+        password as pwd
+        from admin
+        <where>
+            <if test="bo.email != null">
+                and username like
+                concat('%',#{bo.email},'%')
+            </if>
+            <if test="bo.nickname != null">
+                and nickname like
+                concat('%',#{bo.nickname},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deletAdmin">
+        delete from admin
+        where id = #{id}
+    </delete>
+
+    <select id="getAdminId" resultType="integer">
+        select id from admin
+        where username = #{email}
+    </select>
+
+    <update id="updateAdmin">
+        update admin
+        set username = #{email},
+            password = #{pwd},
+            nickname = #{nickname}
+        where id = #{id}
+    </update>
+
+    <select id="getAdminById" resultType="com.cskaoyan.mall.model.vo.AdminInfoVo">
+        select
+            id,
+            username as email,
+            nickname as nickname,
+            password as pwd
+        from admin
+        where id = #{id}
+    </select>
+
+    <select id="getPwdByName" resultType="java.lang.String">
+        select
+            password as pwd
+        from admin
+        where username = #{adminToken}
+    </select>
+
+    <update id="changePwdByName">
+        update admin
+            set password = #{newPwd}
+        where username = #{adminToken}
+    </update>
+</mapper>

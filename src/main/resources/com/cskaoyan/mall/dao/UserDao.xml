@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cskaoyan.mall.dao.UserDao">
+    <insert id="addUser">
+        insert into user
+        values (null, #{email}, #{pwd}, #{nickname}, #{recipient}, #{address}, #{phone})
+    </insert>
+
+    <select id="getAllUser" resultType="com.cskaoyan.mall.model.po.User">
+        select id,
+               email,
+               address,
+               nickname,
+               phone,
+               pwd,
+               recipient
+        from user
+    </select>
+
+    <select id="searchUser" resultType="com.cskaoyan.mall.model.po.User">
+        select id,
+               email,
+               address,
+               nickname,
+               phone,
+               pwd,
+               recipient
+        from user
+        where nickname like
+              concat('%', #{name}, '%')
+    </select>
+
+    <delete id="deletUserById">
+        delete
+        from user
+        where id = #{id}
+    </delete>
+
+    <select id="getUserByEmail" resultType="com.cskaoyan.mall.model.po.User">
+        select *
+        from user
+        where email = #{email}
+    </select>
+</mapper>
